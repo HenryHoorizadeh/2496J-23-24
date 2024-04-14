@@ -23,17 +23,17 @@
 
 // 2496j
 #define OPTICAL_PORT 4
-#define IMU_PORT 13
-#define LF_PORT 11
-#define LM_PORT 17
-#define LB_PORT 4
-#define RF_PORT 15
+#define IMU_PORT 7
+#define LF_PORT 6
+#define LM_PORT 19
+#define LB_PORT 20
+#define RF_PORT 13
 #define RM_PORT 14
-#define RB_PORT 20
+#define RB_PORT 15
 #define GPS_PORT 21
-#define CATA_PORT 7
-#define LIFT_PORT 19
-#define INTAKE_PORT 9
+#define CATA_PORT 17
+#define LIFT_PORT 9
+#define INTAKE_PORT 10
 #define LIFTROTO_PORT 8
 #define CATAROTO_PORT 6
 
@@ -44,8 +44,8 @@ pros::Motor LF (LF_PORT, pros::E_MOTOR_GEARSET_06, true);
 pros::Motor LM (LM_PORT, pros::E_MOTOR_GEARSET_06, false);
 pros::Motor LB (LB_PORT, pros::E_MOTOR_GEARSET_06, true);
 pros::Motor RF (RF_PORT, pros::E_MOTOR_GEARSET_06, false);
-pros::Motor RM (RM_PORT, pros::E_MOTOR_GEARSET_06, false);
-pros::Motor RB (RB_PORT, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor RM (RM_PORT, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor RB (RB_PORT, pros::E_MOTOR_GEARSET_06, false);
 
 //intake
 pros::Motor LIFT (LIFT_PORT, pros::E_MOTOR_GEARSET_18, false);
@@ -53,7 +53,7 @@ pros::Motor LIFT (LIFT_PORT, pros::E_MOTOR_GEARSET_18, false);
 //cata
 pros::Motor CATA (CATA_PORT, pros::E_MOTOR_GEARSET_36, false);
 
-pros::Motor INTAKE (INTAKE_PORT, pros::E_MOTOR_GEARSET_06, false);
+pros::Motor INTAKE (INTAKE_PORT, pros::E_MOTOR_GEARSET_06, true);
 
 //angler for intake
 pros::ADIDigitalOut wing1 ('E', false);
@@ -61,7 +61,7 @@ pros::ADIDigitalOut wing2 ('H', false);
 pros::ADIDigitalOut awp ('C', false);
 pros::ADIDigitalOut liftp ('A', true);
 pros::ADIDigitalOut intakep ('D', false);
-pros::ADIDigitalOut rachet ('B', false);
+pros::ADIDigitalOut rachet ('B');
 
 //cata limit switch
 pros::ADIDigitalIn catalim ('I');
@@ -73,9 +73,9 @@ pros::ADIDigitalOut extender ('J');
 pros::ADIDigitalIn selec ('G');
 
 //sensors
-pros::ADIEncoder encLeft ({{1, 1, 2}, false});
-pros::ADIEncoder encRight ({{1, 3, 4}, false});
-pros::ADIEncoder encMid ({{1, 5, 6}, false});
+// pros::ADIEncoder encLeft ({{1, 1, 2}, false});
+// pros::ADIEncoder encRight ({{1, 3, 4}, false});
+// pros::ADIEncoder encMid ({{1, 5, 6}, false});
 
 pros::Imu imu (IMU_PORT);
 

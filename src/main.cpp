@@ -66,7 +66,7 @@ void disabled() {}
  * starts.
  */
 
-int atn = 1;
+int atn = 3;
 string autstr;
  
 void competition_initialize() {
@@ -198,7 +198,7 @@ void opcontrol() {
 			//cycle++;
       //int encoderAvg = (LF.get_position() + RF.get_position()) / 2;
       // if (cycle % 3 == 0) con.print(0, 0, "Aut: %s", ); //autstr //%s
-      if (time % 50 == 0 && time % 100 != 0 && time != 150){
+      if (time % 50 == 0 && time % 100 != 0 && time % 150 != 0){
         con.print(0, 0, "ERROR: %s           ", autstr);
       } 
       if (time % 50 == 0 && time % 100 != 0){
@@ -206,7 +206,7 @@ void opcontrol() {
       } 
       if (time % 50 == 0){
         setConstants(0.075, 0, 0.1);
-        con.print(2, 0, "Temp: %f        ", float(CATA.get_temperature())); // //imu.get_heading() //mrpm
+        con.print(2, 0, "Temp: %f        ", float(time22)); // //imu.get_heading() //mrpm
       } 
 
 
@@ -245,11 +245,10 @@ void opcontrol() {
 		int right = power - turn;
 
     // //switch between arcade and tank
-    // if (con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-
-    //   // arcToggle = !arcToggle;
-    //   // tankToggle = !tankToggle;
-    // }
+    if (con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+      arcToggle = !arcToggle;
+      tankToggle = !tankToggle;
+    }
 
    
     if (tankToggle) {
@@ -479,10 +478,12 @@ CATA.set_brake_mode(MOTOR_BRAKE_COAST);
 
 // driveArcR(90, 550, 2500);
 
+//280//177
+
 
       // driveTurn2(-55);
-      temp_lift = true;
-      driveStraight2(2000);
+      temp_lift = false;
+      driveTurn2(125);
       // driveStraightC(1000);
       // driveArcLF(180, 500, 10000);
       // // driveArcL(150, 500, 10000);
@@ -529,16 +530,16 @@ CATA.set_brake_mode(MOTOR_BRAKE_COAST);
       // }
       /////////////////////////////////////////////////////
       wingsToggle2 = !wingsToggle2;
-      wingsToggle = false;
+      //wingsToggle = false;
       speed = 69;
       ///////////////////////////////////////////////////////////////////
       //CATA.move_velocity(480);
        up = false;
     } 
-    //else if (NEWL2){
-    // wingsToggle2 = !wingsToggle2;
-    // wingsToggle = false;
-    // } 
+    else if (NEWL2){
+    //wingsToggle2 = !wingsToggle2;
+    wingsToggle = !wingsToggle;
+    } 
     else if (con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
 			//
       up = false;
@@ -585,18 +586,30 @@ if(ccon){
     // }
 
     
-  if (wingsToggle2 == true || wingsToggle == true){
+  if (wingsToggle2 == true){
       wing1.set_value(true); 
   } else {
     wing1.set_value(false);
   }
 
-  if (wingsToggle2 == true && wingsToggle == false){
+  if (wingsToggle == true){
     wing2.set_value(true); 
   } else {
     wing2.set_value(false);
   }
   
+
+  //   if (wingsToggle2 == true || wingsToggle == true){
+  //     wing1.set_value(true); 
+  // } else {
+  //   wing1.set_value(false);
+  // }
+
+  // if (wingsToggle2 == true && wingsToggle == false){
+  //   wing2.set_value(true); 
+  // } else {
+  //   wing2.set_value(false);
+  // }
 
     // if (wingsToggle2 == false) {
 		// 		wing1.set_value(false);
@@ -684,15 +697,15 @@ if (intakeToggle == false) {
 
     angle = liftroto.get_angle();
 
-    if (angle > 30000){
-      angle = angle-36000;
-    }
+    // if (angle > 30000){
+    //   angle = angle-36000;
+    // }
 
 
     if (liftToggle == false) {
       //liftToggle90 == true;
-      setConstants(0.075, 0, 0.1);
-      LIFT.move(calcPID(15400, angle, 40, 140, false)); //15000
+      setConstants(0.125, 0.5, 1);
+      LIFT.move(calcPID(17700, angle, 40, 140, false)); //15000
       if (abs(liftroto.get_angle() - 15000) < 1000){
         lift_count ++;
       }
@@ -716,8 +729,8 @@ if (intakeToggle == false) {
 
 				//liftp.set_value(false);
 			} else if (liftToggle90 == false) {
-      setConstants(0.075, 0, 0.1);
-      LIFT.move(calcPID(4500, angle, 40, 140, false));
+      setConstants(0.125, 0.5, 1);
+      LIFT.move(calcPID(28000, angle, 40, 140, false));
       if (abs(liftroto.get_angle() - 15000) < 1000){
         lift_count ++;
       }

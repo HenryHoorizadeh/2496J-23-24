@@ -26,7 +26,7 @@ double lift_target = 0;
 bool tempre = true;
 bool temp_lift = false;
 
-double prevError; //how is this specified/calculated??
+double prevError; 
 double h;
 //hi
 int integral;
@@ -67,6 +67,7 @@ void setConstants(double kp, double ki, double kd) {
     vKd = kd;
 } 
 
+
 void resetEncoders() { //reset the chassis motors every time a target is reached
     LF.tare_position(); //or set_zero_position(0) or set_zero_position(LF.get_position()); (sets current encoder position to 0)
     LB.tare_position();
@@ -75,6 +76,7 @@ void resetEncoders() { //reset the chassis motors every time a target is reached
     RM.tare_position();
 	LM.tare_position();
 }
+
 
 //setting method for driving straight or turning (pos neg voltages change directions)
 void chasMove(int voltageLF, int voltageLB, int voltageLM, int voltageRF, int voltageRB, int voltageRM) { //voltage to each chassis motor
@@ -105,7 +107,7 @@ double calcPID(double target, double input, int integralKi, int maxIntegral, boo
     } else {
         integral = std::max(integral, -maxIntegral); //same thing but negative max
     }
-    integral;
+    // integral;
     
     derivative = error - prevError;
 
@@ -145,19 +147,19 @@ double calcPID2(double target, double input, int integralKi, int maxIntegral, bo
 
 //driving straight
 void driveStraight(int target) {
-    int timeout = 0;
+    int timeout = 5000;
     // if (abs(target) < 800) {
     //     timeout = 2700;
     // } else {
     //     timeout = 5000;
     // }
 
-    
+ ////////////////////////////////////////////////////////   
     double x = 0;
     x = double(abs(target));
-    timeout = (0.0000000000000214 * pow(x,5)) + (-0.00000000020623 * pow(x, 4)) + (0.00000074005 * pow(x, 3)) + (-0.00121409 * pow(x, 2)) + (1.27769 * x) + 426;
+    timeout = (0.000000000000036785 * pow(x,5)) + (-0.00000000032913 * pow(x, 4)) + (0.00000108025 * pow(x, 3)) + (-0.00162165 * pow(x, 2)) + (1.415 * x) + 373.12;
 
-
+///////////////////////////////////////////////////
     imu.tare();
 
     // if (target == 1400){
@@ -263,14 +265,14 @@ void driveStraight(int target) {
         } 
 
         delay(10);
-        if (time2 % 50 == 0 && time2 % 100 != 0 && time2 != 150){
+        if (time2 % 50 == 0 && time2 % 100 != 0 && time2 % 150 != 0){
         con.print(0, 0, "ERROR: %f           ", float(encoderAvg));
       } 
       if (time2 % 50 == 0 && time2 % 100 != 0){
         con.print(1, 0, "CataTemp: %f           ", float(error));
       } 
       if (time2 % 50 == 0){
-        con.print(2, 0, "Temp: %f        ", float(voltage));
+        con.print(2, 0, "Temp: %f        ", float(time2));
       } 
         
         // if (time2 % 100 == 0) con.clear(); else if (time2 % 50 == 0) {
@@ -303,7 +305,10 @@ void driveStraight2(int target) {
     
     double x = 0;
     x = double(abs(target));
-    timeout = (0.0000000000000214 * pow(x,5)) + (-0.00000000020623 * pow(x, 4)) + (0.00000074005 * pow(x, 3)) + (-0.00121409 * pow(x, 2)) + (1.27769 * x) + 426;
+    timeout = (0.000000000000036785 * pow(x,5)) + (-0.00000000032913 * pow(x, 4)) + (0.00000108025 * pow(x, 3)) + (-0.00162165 * pow(x, 2)) + (1.415 * x) + 373.12;
+
+    // x = double(abs(target));
+    // timeout = (0.0000000000000214 * pow(x,5)) + (-0.00000000020623 * pow(x, 4)) + (0.00000074005 * pow(x, 3)) + (-0.00121409 * pow(x, 2)) + (1.27769 * x) + 426;
 
     
 
@@ -572,7 +577,7 @@ void driveTurn(int target) { //target is inputted in autons
     // setConstants(8.1, 0.025, 160);
     // }
     
-    int timeout = 0;
+    int timeout = 100000000;
     setConstants(TURN_KP, TURN_KI, TURN_KD);
     // if (abs(target) < 30) {
     //     timeout = 1900;
@@ -581,22 +586,23 @@ void driveTurn(int target) { //target is inputted in autons
     // }
 
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     double variKP = 0;
     double x = 0;
     x = double(abs(target));
-    variKP = ( 0.0000000087421 * pow(x, 4)) + (-0.00000244862 * pow(x, 3)) + (-0.0000282007 * pow(x, 2)) + (0.0420013 * x) + 6.65754;
+    variKP = ( -0.000000000045092 * pow(x, 5)) + (-0.000000015632 * pow(x, 4)) + (0.000011939 * pow(x, 3)) + (-0.00194162 * pow(x, 2)) + (0.102398 * x) + 8.4858;
 
     double variKD = 0;
     x = double(abs(target));
-    variKD = ( 0.00000040026 * pow(x, 4)) + (-0.00017729 * pow(x, 3)) + (0.0254803 * pow(x, 2)) + (-1.19824 * x) + 108.796;
+    variKD = ( -0.0000000021864 * pow(x, 5)) + ( 0.00000028361 * pow(x, 4)) + (0.00010541 * pow(x, 3)) + (-0.0200269 * pow(x, 2)) + (0.879464 * x) + 96.8646;
     setConstants(variKP, TURN_KI, variKD);
-
     
+
     x = double(abs(target));
-    timeout = (0.000000084191 * pow(x,5)) + (-0.0000359624 * pow(x, 4)) + (0.00592914 * pow(x, 3)) + (-0.471886 * pow(x, 2)) + (19.9573 * x) + 474.454;
+    timeout = (0.00000006265 * pow(x,5)) + (-0.0000321004 * pow(x, 4)) + (0.00591004 * pow(x, 3)) + (-0.482367 * pow(x, 2)) + (20.1298 * x) + 204.013; //474.45
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //timeout = (-0.00000536976 * pow(x, 4)) + (0.00247647 * pow(x, 3)) + (-0.337691 * pow(x, 2)) + (21.0318 * x) + 900;
 
@@ -624,21 +630,22 @@ void driveTurn(int target) { //target is inputted in autons
         
         chasMove(voltage, voltage, voltage, -voltage, -voltage, -voltage);
         
-        if (abs(target - position) <= 0.5) count++; //0.35
+        if (abs(target - position) <= 0.95) count++; //0.35
         if (count >= 20 || time2 > timeout) {
-         //  imu.tare_heading();
+
            break; 
            
         }
 
         
-        if (time2 % 100 == 0) con.clear(); else if (time2 % 50 == 0) {
+        if (time2 % 50 == 0) {
 			cycle++;
-            if ((cycle+1) % 3 == 0) con.print(0, 0, "Error | %2f", target-position); 
-            //if ((cycle+2) % 3 == 0) con.print(1, 0, "Integral | %2f", integral); //autstr //%s
+            if ((cycle+1) % 3 == 0) con.print(0, 0, "Error | %2f      ", target-position); 
+            if ((cycle+2) % 3 == 0) con.print(1, 0, "Integral | %2f      ", float(time22)); //autstr //%s
             //if ((cycle+3) % 3 == 0) con.print(2, 0, "Integral: %f", integral);
 		}
         time2 += 10;
+        time22 = time2;
         delay(10);
     }
     LF.brake();
@@ -656,7 +663,7 @@ void driveTurn2(int target) { //target is inputted in autons
     double voltage;
     double position;
     int count = 0;
-    time2 = 0;
+    int time2 = 0;
     int cycle = 0;
     int turnv = 0;
     int sav = 0;
@@ -693,11 +700,11 @@ void driveTurn2(int target) { //target is inputted in autons
     double variKP = 0;
     double x = 0;
     x = double(abs(turnv));
-    variKP = ( 0.0000000087421 * pow(x, 4)) + (-0.00000244862 * pow(x, 3)) + (-0.0000282007 * pow(x, 2)) + (0.0420013 * x) + 6.65754;
+    variKP = ( -0.000000000045092 * pow(x, 5)) + (-0.000000015632 * pow(x, 4)) + (0.000011939 * pow(x, 3)) + (-0.00194162 * pow(x, 2)) + (0.102398 * x) + 8.4858;
 
     double variKD = 0;
     x = double(abs(turnv));
-    variKD = ( 0.00000040026 * pow(x, 4)) + (-0.00017729 * pow(x, 3)) + (0.0254803 * pow(x, 2)) + (-1.19824 * x) + 108.796;
+    variKD = ( -0.0000000021864 * pow(x, 5)) + ( 0.00000028361 * pow(x, 4)) + (0.00010541 * pow(x, 3)) + (-0.0200269 * pow(x, 2)) + (0.879464 * x) + 96.8646;
     setConstants(variKP, TURN_KI, variKD);
     
 
@@ -732,7 +739,7 @@ void driveTurn2(int target) { //target is inputted in autons
     // setConstants(7.325, 0.025, 73);  
     // }
     
-    int timeout = 2100;
+    int timeout = 3100;
 
     // if (abs(turnv) < 30) {
     //     timeout = 1900;
@@ -742,7 +749,7 @@ void driveTurn2(int target) { //target is inputted in autons
 
     
     x = double(abs(turnv));
-    timeout = (0.000000084191 * pow(x,5)) + (-0.0000359624 * pow(x, 4)) + (0.00592914 * pow(x, 3)) + (-0.471886 * pow(x, 2)) + (19.9573 * x) + 374.454; //474.45
+    timeout = (0.00000006265 * pow(x,5)) + (-0.0000321004 * pow(x, 4)) + (0.00591004 * pow(x, 3)) + (-0.482367 * pow(x, 2)) + (20.1298 * x) + 204.013; //474.45
 
 
     
@@ -810,7 +817,7 @@ void driveTurn2(int target) { //target is inputted in autons
         
         chasMove(voltage, voltage, voltage, -voltage, -voltage, -voltage);
         
-        if (abs(target - position) <= 0.5) count++; //0.35
+        if (abs(target - position) <= 1) count++; //0.35
         if (count >= 20 || time2 > timeout) {
            break; 
         }
@@ -823,6 +830,7 @@ void driveTurn2(int target) { //target is inputted in autons
             if ((cycle+3) % 3 == 0) con.print(2, 0, "Integral: %2f", float(variKD));
 		}
         time2 += 10;
+        time22 = time2;
         delay(10);
     }
     LF.brake();

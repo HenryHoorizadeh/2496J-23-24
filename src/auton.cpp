@@ -1,4 +1,4 @@
-//#include "api.h"
+#include "api.h"
 #include "auton.h"
 #include "main.h"
 #include "robot.h"
@@ -20,6 +20,7 @@
   void liftU_fn(void* param) {
     int lift_count = 0;
     bool angle = 0;
+    
     //std::uint32_t now = pros::millis();
     while(true){
     angle = liftroto.get_angle();
@@ -340,11 +341,12 @@ imu.tare();
 
 
 
-driveTurn2(28); //30
+driveTurn2(27); //30 //27
      
 driveStraightC(3500);
 temp_lift = true;
 lift_target = 4500;
+intakep.set_value(false);
 //pros::Task liftU(liftU_fn);
 wing1.set_value(true);
 wing2.set_value(true);
@@ -357,10 +359,18 @@ wing1.set_value(false);
 wing2.set_value(false);
 
 
-driveStraightC(600);//first push on goal right
-driveStraight2(-500);//s2
+driveStraightC(800);//first push on goal right //600
+driveTurn2(-56);
+driveStraight2(-500); //800
+/*
+driveTurn2(-35);
+driveStraight2(1700);
+driveTurn2(-56);
+driveStraight2(-200);//s2 //-500
 driveTurn2(-56); //-62
-driveStraight2(1000);
+*/
+driveTurn2(-56);
+driveStraight2(1800); //1000
 tempre = false;
 /*
 time = 0;
@@ -394,7 +404,7 @@ temp_lift = true;
 lift_target = 4500;
 
 //intakep.set_value(false);
-driveStraightC(-200);
+driveStraightC(-200); //-200
 
 
 
@@ -414,7 +424,7 @@ driveTurn2(-30);
 
 //driveArcRF(-220, 200, 1000);
 //driveStraightC(-1100);
-driveArcR(-110, 200, 1000); //-110 //1300
+driveArcR(-110, 100, 1000); //-110 //1300 //200
 //intakep.set_value(true);
 
 
@@ -456,8 +466,9 @@ driveTurn2(-62);
 driveStraightC(900);
 // wing1.set_value(true);
 wing2.set_value(true);
+wing1.set_value(true); //change
 driveArcRF(165, 100, 2000);
-wing1.set_value(true);
+// wing1.set_value(true);
 // wing1.set_value(true);
 // wing2.set_value(true);
 driveStraightC(400);
@@ -474,19 +485,20 @@ wing2.set_value(false);
 
 
 driveTurn2(28);
-driveStraightC(-500);
+driveStraightC(-700);//-700
 driveArcR(-68, 180, 800); //-80 //-60 //-65 //1000
 wing2.set_value(true);
 driveTurn2(-40); //-37
 driveStraightC(1300);
 //wing1.set_value(true);
 //wing2.set_value(true);
-
+wing1.set_value(false);
+//wing1.set_value(false);
 driveArcRF(160, 525, 1700);  //280 //480
 wing1.set_value(false);
 wing1.set_value(false);
 driveTurn2(110); //118
-driveStraight2(600); //700
+//driveStraight2(600); //700 
 driveStraight2(-400); //-500
 driveStraight2(900); 
 driveStraight2(-1800); //-500
@@ -558,9 +570,16 @@ driveStraight2(-1800); //-500
   driveStraight2(1200);
   wing1.set_value(false);
   driveStraight2(-400);
+  driveTurn2(-150);
+  driveStraight2(2700);
+  driveTurn2(93);
   INTAKE.move(-127);
-  driveStraight2(1000);
-  driveStraight2(-800);
+  driveStraight2(1400);
+  driveTurn2(75);
+  driveStraight2(1050);
+
+  // driveStraight2(300);
+  // driveStraight2(-400);
     
   //   tempre = false;
   //  awp.set_value(true);
