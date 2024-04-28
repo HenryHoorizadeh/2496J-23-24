@@ -39,6 +39,7 @@ extern double lift_target;
 extern bool tempre;
 extern bool temp_lift;
 extern int integral;
+extern double variKDP;
 //hello
 
 //tune straight constants here: setConstants(STRAIGHT_KP, STRAIGHT_KI, STRAIGHT_KD);
@@ -52,9 +53,9 @@ extern int integral;
 
 
 //tune turn constants here: setConstants(TURN_KP, TURN_KI, TURN_KD);
-#define TURN_KP 8.75 //5.25//8.75
+#define TURN_KP 8.50 //5.25//8.75
 #define TURN_KI 0.115 //0.125//0.115
-#define TURN_KD 105  //38 //105 //70
+#define TURN_KD 102 //38 //105 //70
 
 //tune turn integral-specific here: voltage = calcPID(target, position, TURN_INTEGRAL_KI, TURN_MAX_INTEGRAL);
 #define TURN_INTEGRAL_KI 30

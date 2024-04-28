@@ -66,35 +66,35 @@ void disabled() {}
  * starts.
  */
 
-int atn = 3;
+int atn = 4;
 string autstr;
  
 void competition_initialize() {
     while(true) {
-      if(selec.get_value() == true) {
+      if(selec.get_value() == true  || con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
         atn ++;  
         delay(350);
       }
       //resetEncoders();
       
       if (atn == 0) {
-        autstr = "Skills";
+        autstr = "CLOSE_RUSH_AWP";
         con.print(0, 0, "Aut 0: %s", autstr);
       }
       else if (atn == 1) {
-        autstr = "NONE";
+        autstr = "SINGLE_PUSH";
         con.print(0, 0, "Aut 1: %s", autstr);
       }
       else if (atn == 2) {
-        autstr = "AWPON";
+        autstr = "RUSH6BALL";
         con.print(0, 0, "Aut 2: %s", autstr);
       }
       else if (atn == 3) {
-       autstr = "AWPOFF";
+       autstr = "SAFE4BALL";
         con.print(0, 0, "Aut 3: %s", autstr);
       }
       else if (atn == 4) {
-       autstr = "ML1";
+       autstr = "SAFE6BALL";
         con.print(0, 0, "Aut 4: %s", autstr);
       }
       else if (atn == 5) {
@@ -202,11 +202,11 @@ void opcontrol() {
         con.print(0, 0, "ERROR: %s           ", autstr);
       } 
       if (time % 50 == 0 && time % 100 != 0){
-        con.print(1, 0, "CataTemp: %f           ", float(imu.get_heading()));
+        con.print(1, 0, "CataTemp: %f           ", float(time22)); //imu.get_heading()
       } 
       if (time % 50 == 0){
         setConstants(0.075, 0, 0.1);
-        con.print(2, 0, "Temp: %f        ", float(time22)); // //imu.get_heading() //mrpm
+        con.print(2, 0, "Temp: %f        ", float(variKDP)); // //imu.get_heading() //mrpm
       } 
 
 
@@ -246,8 +246,9 @@ void opcontrol() {
 
     // //switch between arcade and tank
     if (con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-      arcToggle = !arcToggle;
-      tankToggle = !tankToggle;
+      rachetToggle = !rachetToggle;
+      // arcToggle = !arcToggle;
+      // tankToggle = !tankToggle;
     }
 
    
@@ -269,25 +270,25 @@ void opcontrol() {
     }
 
     //auton selector
-    if (selec.get_value() == true) { // brain was here
+    if (selec.get_value() == true   || con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) { // brain was here
       atn++;
      // delay(350);
     }
     
     if (atn == 0) {
-      autstr = "Skills";
+      autstr = "CLOSE_RUSH_AWP";
     }
     if (atn == 1) {
-      autstr = "NONE";
+      autstr = "SINGLE_PUSH";
     }
     else if (atn == 2) {
-      autstr = "AWPON";
+      autstr = "RUSH6BALL";
     }
     else if (atn == 3) {
-      autstr = "AWPOFF";
+      autstr = "SAFE4BALL";
     }
     else if (atn == 4) {
-      autstr = "ML1";
+      autstr = "SAFE6BALL";
     }
     else if (atn == 5) {
       autstr = "DEFN1";
@@ -481,9 +482,16 @@ CATA.set_brake_mode(MOTOR_BRAKE_COAST);
 //280//177
 
 
+  // driveTurn2(-105);
+  // driveStraight2(1700);
+
+
+
+        // driveTurn2(90);
+        // driveTurn2(-105);
       // driveTurn2(-55);
       temp_lift = false;
-      driveTurn2(125);
+      // driveArcR(90, 600, 10000);
       // driveStraightC(1000);
       // driveArcLF(180, 500, 10000);
       // // driveArcL(150, 500, 10000);
@@ -535,6 +543,7 @@ CATA.set_brake_mode(MOTOR_BRAKE_COAST);
       ///////////////////////////////////////////////////////////////////
       //CATA.move_velocity(480);
        up = false;
+       
     } 
     else if (NEWL2){
     //wingsToggle2 = !wingsToggle2;
@@ -633,7 +642,7 @@ if(ccon){
     //   if (con.get_digital_new_press(E_CONTROLLER_DIGITAL_A)) {
 		// 	rachetToggle = !rachetToggle;
 		// }
-    LIFT.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    //LIFT.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     // if (rachetToggle == false) {
 		// 		rachet.set_value(false); 
 		// 	} else {
@@ -658,7 +667,7 @@ if (intakeToggle == false) {
     RF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     RM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     RB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
+    LIFT.set_brake_mode(E_MOTOR_BRAKE_HOLD);
     liftToggle = true;
      liftToggle90 = true;
 			}
@@ -730,7 +739,7 @@ if (intakeToggle == false) {
 				//liftp.set_value(false);
 			} else if (liftToggle90 == false) {
       setConstants(0.125, 0.5, 1);
-      LIFT.move(calcPID(28000, angle, 40, 140, false));
+      LIFT.move(calcPID(28500, angle, 40, 140, false)); //28000
       if (abs(liftroto.get_angle() - 15000) < 1000){
         lift_count ++;
       }
@@ -742,7 +751,11 @@ if (intakeToggle == false) {
       }} else {
 
       if (up == false && down == false){
+      if(rachetToggle){
+        LIFT.move(-power);
+      } else {
       LIFT.move(0);
+      }
     }
 
         //liftp.set_value(true);

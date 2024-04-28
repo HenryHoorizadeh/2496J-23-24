@@ -23,7 +23,7 @@
 
 // 2496j
 #define OPTICAL_PORT 4
-#define IMU_PORT 7
+#define IMU_PORT 2
 #define LF_PORT 6
 #define LM_PORT 19
 #define LB_PORT 20

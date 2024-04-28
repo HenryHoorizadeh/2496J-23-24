@@ -26,6 +26,8 @@ double lift_target = 0;
 bool tempre = true;
 bool temp_lift = false;
 
+double variKDP;
+
 double prevError; 
 double h;
 //hi
@@ -265,7 +267,7 @@ void driveStraight(int target) {
         } 
 
         delay(10);
-        if (time2 % 50 == 0 && time2 % 100 != 0 && time2 % 150 != 0){
+    if (time2 % 50 == 0 && time2 % 100 != 0 && time2 % 150 != 0){
         con.print(0, 0, "ERROR: %f           ", float(encoderAvg));
       } 
       if (time2 % 50 == 0 && time2 % 100 != 0){
@@ -366,17 +368,32 @@ void driveStraight2(int target) {
         voltage = calcPID(target, encoderAvg, STRAIGHT_INTEGRAL_KI, STRAIGHT_MAX_INTEGRAL, true);
 
         
-   
-        if(init_heading > 180) {
-            init_heading = (360 - init_heading);
-        }
+     
 
-        if(imu.get_heading() < 180) {
+        if(init_heading < 40 ) {
+            if(imu.get_heading() > 180){
+                heading_error = init_heading - (imu.get_heading()-360);
+            } else {
+                heading_error = init_heading - imu.get_heading();
+            }
+        } else if(init_heading > 320){
+            if(imu.get_heading() < 180){
+                heading_error = init_heading - (imu.get_heading()+360);
+            } else {
+                heading_error = init_heading - imu.get_heading();
+            }
+
+        } else {
             heading_error = init_heading - imu.get_heading();
         }
-        else {
-            heading_error = ((360 - imu.get_heading()) - init_heading);
-        }
+
+
+        //         if(imu.get_heading() < 180) {
+        //     heading_error = init_heading - imu.get_heading();
+        // }
+        // else {
+        //     heading_error = ((360 - imu.get_heading()) - init_heading);
+        // }
 
         heading_error = heading_error * 7;
          //heading_error = 0;
@@ -395,13 +412,23 @@ void driveStraight2(int target) {
 
         delay(10);
         
-        if (time2 % 100 == 0) con.clear(); else if (time2 % 50 == 0) {
-			cycle++;
-            setConstants(0.075, 0, 0.1);
-            if ((cycle+1) % 3 == 0) con.print(0, 0, "Enc: %2f", encoderAvg); 
-            if ((cycle+2) % 3 == 0) con.print(1, 0, "Heading: %2f", heading_error); //autstr //%s
-            if ((cycle+3) % 3 == 0) con.print(2, 0, "ERROR: %f", float(calcPID2(4500, 10, 40, 140, false)));
-		}
+        // if (time2 % 100 == 0) con.clear(); else if (time2 % 50 == 0) {
+		// 	cycle++;
+        //     setConstants(0.075, 0, 0.1);
+        //     if ((cycle+1) % 3 == 0) con.print(0, 0, "Enc: %2f", encoderAvg); 
+        //     if ((cycle+2) % 3 == 0) con.print(1, 0, "Heading: %2f", heading_error); //autstr //%s
+        //     if ((cycle+3) % 3 == 0) con.print(2, 0, "ERROR: %f", float(calcPID2(4500, 10, 40, 140, false)));
+		// }
+        if (time2 % 50 == 0 && time2 % 100 != 0 && time2 % 150 != 0){
+        con.print(0, 0, "ERROR: %f           ", float(imu.get_heading()));
+      } 
+      if (time2 % 50 == 0 && time2 % 100 != 0){-
+        con.print(1, 0, "CataTemp: %f           ", float(init_heading)); //imu.get_heading()
+      } 
+      if (time2 % 50 == 0){
+        setConstants(0.075, 0, 0.1);
+        con.print(2, 0, "Temp: %f        ", float(heading_error)); // //imu.get_heading() //mrpm
+      } 
         time2 += 10;
         //hi
     }
@@ -577,7 +604,7 @@ void driveTurn(int target) { //target is inputted in autons
     // setConstants(8.1, 0.025, 160);
     // }
     
-    int timeout = 100000000;
+    int timeout = 1000000;
     setConstants(TURN_KP, TURN_KI, TURN_KD);
     // if (abs(target) < 30) {
     //     timeout = 1900;
@@ -587,21 +614,22 @@ void driveTurn(int target) { //target is inputted in autons
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    double variKP = 0;
+    // double variKP = 0;
     double x = 0;
-    x = double(abs(target));
-    variKP = ( -0.000000000045092 * pow(x, 5)) + (-0.000000015632 * pow(x, 4)) + (0.000011939 * pow(x, 3)) + (-0.00194162 * pow(x, 2)) + (0.102398 * x) + 8.4858;
+    // x = double(abs(target));
+    // variKP = ( -0.000000000045092 * pow(x, 5)) + (-0.000000015632 * pow(x, 4)) + (0.000011939 * pow(x, 3)) + (-0.00194162 * pow(x, 2)) + (0.102398 * x) + 8.4858;
 
     double variKD = 0;
     x = double(abs(target));
-    variKD = ( -0.0000000021864 * pow(x, 5)) + ( 0.00000028361 * pow(x, 4)) + (0.00010541 * pow(x, 3)) + (-0.0200269 * pow(x, 2)) + (0.879464 * x) + 96.8646;
-    setConstants(variKP, TURN_KI, variKD);
+    variKD = (-0.0000000042528 * pow(x, 5)) + (0.00000209186 * pow(x, 4)) + (-0.000381218 * pow(x, 3)) + (0.0314888 * pow(x, 2)) + (-0.951821 * x) + 87.7549;
+    variKDP = variKD;
+    setConstants(TURN_KP, TURN_KI, variKD);
     
 
     x = double(abs(target));
-    timeout = (0.00000006265 * pow(x,5)) + (-0.0000321004 * pow(x, 4)) + (0.00591004 * pow(x, 3)) + (-0.482367 * pow(x, 2)) + (20.1298 * x) + 204.013; //474.45
+    timeout = (-0.0000000079119 * pow(x,5)) + (-0.0000001471 * pow(x, 4)) + (0.000712486 * pow(x, 3)) + (-0.0973635 * pow(x, 2)) + (6.40802 * x) + 368.861; //474.45
 
-
+    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //timeout = (-0.00000536976 * pow(x, 4)) + (0.00247647 * pow(x, 3)) + (-0.337691 * pow(x, 2)) + (21.0318 * x) + 900;
@@ -696,16 +724,18 @@ void driveTurn2(int target) { //target is inputted in autons
     }
  //fortnite - derrick
 
- 
-    double variKP = 0;
+    int timeout = 3100;
     double x = 0;
-    x = double(abs(turnv));
-    variKP = ( -0.000000000045092 * pow(x, 5)) + (-0.000000015632 * pow(x, 4)) + (0.000011939 * pow(x, 3)) + (-0.00194162 * pow(x, 2)) + (0.102398 * x) + 8.4858;
-
     double variKD = 0;
     x = double(abs(turnv));
-    variKD = ( -0.0000000021864 * pow(x, 5)) + ( 0.00000028361 * pow(x, 4)) + (0.00010541 * pow(x, 3)) + (-0.0200269 * pow(x, 2)) + (0.879464 * x) + 96.8646;
-    setConstants(variKP, TURN_KI, variKD);
+    variKD = (-0.0000000042528 * pow(x, 5)) + (0.00000209186 * pow(x, 4)) + (-0.000381218 * pow(x, 3)) + (0.0314888 * pow(x, 2)) + (-0.951821 * x) + 87.7549;
+    variKDP = variKD;
+    setConstants(TURN_KP, TURN_KI, variKD);
+    
+
+    x = double(abs(turnv));
+    timeout = (-0.0000000079119 * pow(x,5)) + (-0.0000001471 * pow(x, 4)) + (0.000712486 * pow(x, 3)) + (-0.0973635 * pow(x, 2)) + (6.40802 * x) + 368.861; //474.45
+
     
 
 
@@ -739,7 +769,7 @@ void driveTurn2(int target) { //target is inputted in autons
     // setConstants(7.325, 0.025, 73);  
     // }
     
-    int timeout = 3100;
+
 
     // if (abs(turnv) < 30) {
     //     timeout = 1900;
@@ -747,11 +777,7 @@ void driveTurn2(int target) { //target is inputted in autons
     //     timeout = 2100;
     // }
 
-    
-    x = double(abs(turnv));
-    timeout = (0.00000006265 * pow(x,5)) + (-0.0000321004 * pow(x, 4)) + (0.00591004 * pow(x, 3)) + (-0.482367 * pow(x, 2)) + (20.1298 * x) + 204.013; //474.45
-
-
+  
     
     // double x = 0;
     //x = double(abs(turnv));
@@ -826,7 +852,7 @@ void driveTurn2(int target) { //target is inputted in autons
         if (time2 % 100 == 0) con.clear(); else if (time2 % 50 == 0) {
 			cycle++;
             if ((cycle+1) % 3 == 0) con.print(0, 0, "Error | %2f", float(turnv)); 
-            if ((cycle+2) % 3 == 0) con.print(1, 0, "Integral | %2f", float(variKP)); //autstr //%s
+            if ((cycle+2) % 3 == 0) con.print(1, 0, "Integral | %2f", float(variKD)); //autstr //%s
             if ((cycle+3) % 3 == 0) con.print(2, 0, "Integral: %2f", float(variKD));
 		}
         time2 += 10;
@@ -859,10 +885,10 @@ resetEncoders();
 con.clear();
 //int timeout = 5000;
 ltargetFinal = double((theta / 360) * 2 * pi * radius); // * double(2) * pi * double(radius));
-rtargetFinal = double((theta / 360) * 2 * pi * (radius + 550));
+rtargetFinal = double((theta / 360) * 2 * pi * (radius + 540));
 theta = theta + 45;
 ltarget = double((theta / 360) * 2 * pi * radius); // * double(2) * pi * double(radius));
-rtarget = double((theta / 360) * 2 * pi * (radius + 550));
+rtarget = double((theta / 360) * 2 * pi * (radius + 540));
 while (true){
 
 if(temp_lift){
@@ -962,7 +988,7 @@ resetEncoders();
 con.clear();
 //int timeout = 5000;
 ltarget = double((theta / 360) * 2 * pi * radius); // * double(2) * pi * double(radius));
-rtarget = double((theta / 360) * 2 * pi * (radius + 550));
+rtarget = double((theta / 360) * 2 * pi * (radius + 540));
 while (true){
 
 
@@ -1059,7 +1085,7 @@ int time = 0;
 resetEncoders();
 con.clear();
 //int timeout = 5000;
-ltarget = double((theta / 360) * 2 * pi * (radius + 550)); // * double(2) * pi * double(radius));
+ltarget = double((theta / 360) * 2 * pi * (radius + 540 )); // * double(2) * pi * double(radius));
 rtarget = double((theta / 360) * 2 * pi * (radius));
 while (true){
 
@@ -1157,10 +1183,10 @@ int time = 0;
 resetEncoders();
 con.clear();
 //int timeout = 5000;
-ltargetFinal = double((theta / 360) * 2 * pi * (radius+550)); // * double(2) * pi * double(radius));
+ltargetFinal = double((theta / 360) * 2 * pi * (radius+540)); // * double(2) * pi * double(radius));
 rtargetFinal = double((theta / 360) * 2 * pi * (radius));
 theta = theta + 45;
-ltarget = double((theta / 360) * 2 * pi * (radius + 550)); // * double(2) * pi * double(radius));
+ltarget = double((theta / 360) * 2 * pi * (radius + 540)); // * double(2) * pi * double(radius));
 rtarget = double((theta / 360) * 2 * pi * (radius));
 while (true){
 

@@ -59,453 +59,46 @@ void autonomous() {
 
 
   if (atn == 0) {
-tempre = false;
-    //startnew
-    // INTAKE.move(120);
-    // RF.move(-10);
-    // RM.move(-10);
-    // RB.move(-10);
-    LF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    LM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    LB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    imu.tare();
+  LIFT.move(-127);
+  INTAKE.move(127);
+  driveStraight2(1900);
+  LIFT.move(0);
+  driveStraight2(-150);
+  wing1.set_value(true);
+  driveTurn2(75);
+  driveStraight2(900);
+  INTAKE.move(90);
+  wing1.set_value(false);
+  driveStraight2(-1000);
+  driveTurn2(-160);
+  driveStraight2(1950);
+  driveTurn2(135);//125
+  wing2.set_value(true);
+  driveArcLF(8, 300, 1500);
+  // driveStraight2(750);
+  driveTurn2(10);
+  wing2.set_value(false);
+  driveTurn2(120);
+  driveStraight2(800);
+  driveTurn2(75);
+  INTAKE.move(-127);
+  driveStraight2(750);
 
-    intakep.set_value(true);
-    LIFT.move(-127);
-    delay(550); //350
-
-    int count = 0;
-    int time = 0;
-
-
-    int time3 = 0;
-
-    LIFT.move(0);
-    cataroto.reset_position();
-    
-    ///////////////////////////////////////////////////////////////////
-    /*
-    CATA.move_velocity(75); //67
-     while ((time3 < 27000) && (-cataroto.get_position() < 828000)){
-        con.print(1, 0, "Roto: %f           ", float(cataroto.get_position()));
-        delay(10);
-        time3 += 10;
-    }
-    */
-    ///////////////////////////////////////////////////////////////////
-    CATA.move(0);
-
-time3 = 0;
-
-while(((cataroto.get_angle() < 34000 && cataroto.get_angle() > 16000) || (cataroto.get_angle() > 0 && cataroto.get_angle() < 14000)) && time3 < 1000){
-     CATA.move_velocity(45);
-     delay(1);
-     time3 += 1;
-    }
-    CATA.move(0);
-
-
-
-tempre = false;
-imu.tare();
-intakep.set_value(true);
-driveStraight2(100);
-
-
-
-
-
-driveTurn2(28); //30
-     
-driveStraightC(3700);
-temp_lift = true;
-lift_target = 4500;
-//pros::Task liftU(liftU_fn);
-wing1.set_value(true);
-wing2.set_value(true);
-
-
-driveArcLF(30, 1200, 1700); //500
-
-driveArcLF(55, 1250, 1200);
-wing1.set_value(false);
-wing2.set_value(false);
-
-
-driveStraightC(600);//first push on goal right
-driveStraight2(-600);
-driveTurn2(-67); //-62
-driveStraight2(1800);
-tempre = false;
-/*
-time = 0;
-int lift_count = 0;
-double angle = 0;
-
-
-while(true){
-setConstants(0.09, 0, 0.2); //0.075
-angle = liftroto.get_angle();
-
-
-    if (angle > 30000){
-      angle = angle-36000;
-    }
-      LIFT.move(calcPID(6000, angle, 40, 140, false));
-      if (abs(liftroto.get_angle() - 15000) < 900){ //1000
-        lift_count ++;
-      }
-      delay(10);
-      time += 10;
-      if ((lift_count > 400) || time > 750){
-        LIFT.move(0);
-        time += 10;
-        break;
-        lift_count = 0;
-      }
-}*/
-
-
-//intakep.set_value(false);
-driveStraightC(-200);
-
-
-
-
-
-
-driveTurn2(-150);
-wing1.set_value(true);
-driveStraightC(400); //700
-
-// wing2.set_value(false);
-
-/*split arc
-driveArcRF(110, 200, 1700);//make sure corner ball are near goal
-wing1.set_value(false);
-driveStraightC(200);
-driveArcRF(70, 200, 1200);
-*/
-temp_lift = true;
-lift_target = 4500;
-
-driveArcRF(190, 200, 1800);
-driveTurn2(28); 
-driveStraight(800);
-
-wing1.set_value(false);
-driveStraightC(-200);
-
-
-//driveArcRF(-220, 200, 1000);
-//driveStraightC(-1100);
-driveArcR(-180, 200, 1800); //-110 //1300 //1100 
-//intakep.set_value(true);
-
-
-driveStraightC(425); //400
-driveArcRF(160, 230, 2500); //180
-driveStraight2(2000);
-driveTurn2(0);
-driveStraightC(-1000);//-2000
-//driveTurn2(-60);
-driveArcR(-75, 200, 750); //150//1000 //800
-driveTurn2(-62);
-wing2.set_value(true);
-driveStraightC(350);//600
-
-
-
-
-driveArcRF(90, 300, 1000);
-driveStraightC(1500);
-driveTurn2(0);
-wing2.set_value(false);
-driveStraightC(-1000);
-driveArcR(-75, 200, 750); //1000 ///800
-driveTurn2(-62);
-//driveTurn2(-60);
-wing2.set_value(true);
-driveStraightC(550); //700
-
-
-
-
-driveArcRF(100, 230, 1000);
-driveStraightC(1500);
-driveTurn2(28);
-wing2.set_value(false);
-driveStraightC(-1000);
-driveArcR(-90, 200, 800); //1000 //800
-driveTurn2(-62);
-driveStraightC(900);
-wing1.set_value(true);
-wing2.set_value(true);
-driveArcRF(165, 100, 2000);
-// wing1.set_value(true);
-// wing2.set_value(true);
-driveStraightC(400);
-driveArcLF(75, 350, 2000); //250
-driveStraight2(300);
-wing1.set_value(false);
-// wing2.set_value(false);
-driveStraight2(-400);
-driveTurn2(28);
-driveStraight2(700);
-wing2.set_value(false);
-driveTurn2(28);
-driveStraightC(-700); ///-500
-
-
-driveArcR(-68, 180, 700); //-80 //-60 //-65 //1000
-// wing2.set_value(true);
-// wing1.set_value(true);
-driveTurn2(-40); //-37
-driveStraightC(1300);
-driveArcLF(22, 110, 800);
-driveStraight2(1200);
-driveTurn2(28);
-
-//final side push
-wing1.set_value(true);
-wing2.set_value(true);
-driveArcRF(30, 1200, 1700); //500
-driveArcRF(55, 1250, 1200);
-wing1.set_value(false);
-wing2.set_value(false);
-driveStraightC(600);//first push on goal right
-driveStraight2(-600);
-driveTurn2(118); //-62
-driveStraight2(1800);
-
-
-
+  
+  
 
 
 
 
   
   } else if (atn == 1) {
-/*
-while(((cataroto.get_angle() < 34000 && cataroto.get_angle() > 16000) || (cataroto.get_angle() > 0 && cataroto.get_angle() < 14000)) && time < 1000){
-     CATA.move_velocity(45);
-     delay(1);
-     time += 1;
-    }
-    CATA.move(0);
-tempre = false;
-*/
-tempre = false;
-    //startnew
-    // INTAKE.move(120);
-    // RF.move(-10);
-    // RM.move(-10);
-    // RB.move(-10);
-    LF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    LM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-    LB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+  imu.tare();
+  LIFT.move(-127);
+  driveStraight2(-1900);
+  LIFT.move(0);
+  driveStraight2(900);
 
-    intakep.set_value(true);
-    LIFT.move(-127);
-    delay(550); //350
-
-    int count = 0;
-    int time = 0;
-
-
-    int time3 = 0;
-
-    LIFT.move(0);
-    cataroto.reset_position();
-    
-    ///////////////////////////////////////////////////////////////////
-    
-    CATA.move_velocity(85); //67 //75
-     while ((time3 < 27000) && (-cataroto.get_position() < 810000)){ //828000
-        con.print(1, 0, "Roto: %f           ", float(cataroto.get_position()));
-        delay(10);
-        time3 += 10;
-    }
-    
-    ///////////////////////////////////////////////////////////////////
-    CATA.move(0);
-
-time3 = 0;
-
-
-tempre = false;
-imu.tare();
-intakep.set_value(true);
-driveStraight2(100);
-imu.tare();
-
-
-
-
-driveTurn2(27); //30 //27
-     
-driveStraightC(3500);
-temp_lift = true;
-lift_target = 4500;
-intakep.set_value(false);
-//pros::Task liftU(liftU_fn);
-wing1.set_value(true);
-wing2.set_value(true);
-
-
-driveArcLF(30, 1200, 1700); //500
-
-driveArcLF(55, 1250, 1200);
-wing1.set_value(false);
-wing2.set_value(false);
-
-
-driveStraightC(800);//first push on goal right //600
-driveTurn2(-56);
-driveStraight2(-500); //800
-/*
-driveTurn2(-35);
-driveStraight2(1700);
-driveTurn2(-56);
-driveStraight2(-200);//s2 //-500
-driveTurn2(-56); //-62
-*/
-driveTurn2(-56);
-driveStraight2(1800); //1000
-tempre = false;
-/*
-time = 0;
-int lift_count = 0;
-double angle = 0;
-
-
-while(true){
-setConstants(0.09, 0, 0.2); //0.075
-angle = liftroto.get_angle();
-
-
-    if (angle > 30000){
-      angle = angle-36000;
-    }
-      LIFT.move(calcPID(6000, angle, 40, 140, false));
-      if (abs(liftroto.get_angle() - 15000) < 900){ //1000
-        lift_count ++;
-      }
-      delay(10);
-      time += 10;
-      if ((lift_count > 400) || time > 750){
-        LIFT.move(0);
-        time += 10;
-        break;
-        lift_count = 0;
-      }
-}*/
-
-temp_lift = true;
-lift_target = 4500;
-
-//intakep.set_value(false);
-driveStraightC(-200); //-200
-
-
-
-
-
-
-driveTurn2(-150);
-wing1.set_value(true);
-driveStraightC(400); //700
-
-// wing2.set_value(false);
-driveArcRF(110, 200, 1700);//make sure corner ball are near goal
- wing1.set_value(false);
-driveStraightC(200);
-driveTurn2(-30);
-
-
-//driveArcRF(-220, 200, 1000);
-//driveStraightC(-1100);
-driveArcR(-110, 100, 1000); //-110 //1300 //200
-//intakep.set_value(true);
-
-
-driveStraightC(425); //400
-driveArcRF(160, 230, 2500); //180
-driveStraight2(2000);
-driveTurn2(0);
-driveStraightC(-1000);//-2000
-//driveTurn2(-60);
-driveArcR(-75, 200, 800); //150 //1000
-driveTurn2(-62);
-wing2.set_value(true);
-driveStraightC(350);//600
-
-
-
-
-driveArcRF(90, 300, 1000);
-driveStraightC(1500);
-driveTurn2(0);
-wing2.set_value(false);
-driveStraightC(-1000);
-driveArcR(-75, 200, 700); //1000
-driveTurn2(-62);
-//driveTurn2(-60);
-wing2.set_value(true);
-driveStraightC(550); //700
-
-
-
-
-driveArcRF(100, 230, 1000);
-driveStraightC(1500);
-driveTurn2(28);
-wing2.set_value(false);
-driveStraightC(-1000);
-driveArcR(-90, 200, 900); //1000
-driveTurn2(-62);
-driveStraightC(900);
-// wing1.set_value(true);
-wing2.set_value(true);
-wing1.set_value(true); //change
-driveArcRF(165, 100, 2000);
-// wing1.set_value(true);
-// wing1.set_value(true);
-// wing2.set_value(true);
-driveStraightC(400);
-driveArcLF(75, 350, 2000); //250
-driveStraight2(300);
-wing1.set_value(false);
-// wing2.set_value(false);
-driveStraight2(-400);
-driveTurn2(28);
-driveStraight2(700);
-wing2.set_value(false);
-
-
-
-
-driveTurn2(28);
-driveStraightC(-700);//-700
-driveArcR(-68, 180, 800); //-80 //-60 //-65 //1000
-wing2.set_value(true);
-driveTurn2(-40); //-37
-driveStraightC(1300);
-//wing1.set_value(true);
-//wing2.set_value(true);
-wing1.set_value(false);
-//wing1.set_value(false);
-driveArcRF(160, 525, 1700);  //280 //480
-wing1.set_value(false);
-wing1.set_value(false);
-driveTurn2(110); //118
-//driveStraight2(600); //700 
-driveStraight2(-400); //-500
-driveStraight2(900); 
-driveStraight2(-1800); //-500
-
-
-
-  
 
   
   }
@@ -513,45 +106,124 @@ driveStraight2(-1800); //-500
 
 //22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 
-  else if (atn == 2) { //3ball
-    intakep.set_value(true);
-  INTAKE.move(127);
-  wing2.set_value(true);
-  delay(150);
-  driveStraightC(500);
-  wing2.set_value(false);
-  driveStraight2(2100);
-  driveStraightC(-2200); //-2400
-  INTAKE.move(-127);
-  driveTurn2(90);
-  driveTurn2(-75);
-  INTAKE.move(127);
-  LIFT.move(-127);
-  driveStraight2(1700);
-  LIFT.move(0);
-  driveStraight2(-1500); //-1700
-  driveTurn2(97);
+  else if (atn == 2){ //5ball
 
-  wing1.set_value(true);
-  wing2.set_value(true);
-  driveArcLF(30, 1200, 1700); //500
-  INTAKE.move(-127);
-  driveArcLF(45, 1250, 1000);
-  wing1.set_value(false);
-  wing2.set_value(false);
-  driveStraightC(1500);
-  driveStraightC(-800);
-  driveTurn2(15);
-  driveStraightC(1500);
-  driveStraight2(-800);
-  driveTurn2(-45);
-  INTAKE.move(127);
-  // driveStraight2(1800);
-  // driveStraightC(-700);
-  // //Cut
-  // driveArcLF(90, 500, 1500);
-  // driveStraight2(-1000);
+  // imu.tare();
+  // LIFT.move(-127);
+  // INTAKE.move(127);
+  // wing2.set_value(true);
+  // // driveStraight2(2450);
+  // driveStraightC(1850);
+  // wing2.set_value(false);
+  // driveStraight2(600);
+  // LIFT.move(0);
+  // driveTurn2(115);
+  // wing1.set_value(true);
+  // INTAKE.move(-127);
+  // driveStraight2(1500);
+  // wing1.set_value(false);
+  // driveStraight2(-700);
+  // driveTurn2(-105);
+  // INTAKE.move(127);
+  // driveStraight2(1000);
+  // driveTurn2(-20);
+  // driveStraight(-2150);
+  // driveTurn2(90);
+  // wing2.set_value(true);
+  // driveStraight2(700);
+  // driveTurn2(0);
+  // wing2.set_value(false);
+  // driveTurn2(50);
+  // driveStraight2(1000);
+  // driveStraight2(-600);
+
+
+// imu.tare();
+//   LIFT.move(-127);
+//   INTAKE.move(127);
+//   driveStraight2(2450);
+//   LIFT.move(0);
+//   driveTurn2(115);
+//   wing1.set_value(true);
+//   INTAKE.move(-127);
+//   driveStraight2(1500);
+//   wing1.set_value(false);
+//   driveStraight2(-700);
+//   driveTurn2(-105);
+//   INTAKE.move(127);
+//   driveStraight2(1000);
+//   driveTurn2(155);
+//   wing1.set_value(true);
+//   driveStraightC(1400); //1100
+//   wing1.set_value(false);
   
+//   // driveArcLF(105, 300, 900);
+//   driveArcLF(75, 300, 400);
+//   wing2.set_value(true);
+//   driveArcLF(20, 300, 400);
+//   driveTurn2(0);
+//   wing2.set_value(false);
+//   INTAKE.move(-127);
+//   driveTurn2(60);
+//   driveStraight2(1700);
+//   driveTurn2(60);
+//   driveStraight2(-800);
+//   driveTurn2(-105);
+//   driveArcRF(45, 1200, 1700);
+//   INTAKE.move(127);
+//   driveStraight2(700);
+//   driveStraight2(-700);
+//   driveArcRF(45, -600, 1700);
+//   driveTurn2(60);
+//   INTAKE.move(127);
+
+
+
+/////////////////////////////////
+
+  imu.tare();
+  LIFT.move(-127);
+  INTAKE.move(127);
+  driveStraight2(2450);
+  LIFT.move(0);
+  driveTurn2(115);
+  wing1.set_value(true);
+  INTAKE.move(-127);
+  driveStraight2(1500);
+  wing1.set_value(false);
+  driveStraight2(-700);
+  driveTurn2(-105);
+  INTAKE.move(127);
+  driveStraight2(1000);
+  driveTurn2(175);
+  //wing1.set_value(true);
+  INTAKE.move(-127);
+  driveStraightC(900); //1100
+  wing1.set_value(false);
+  
+  // driveArcLF(105, 300, 900);
+  driveArcRF(120, 175, 1800); //150
+  INTAKE.move(127);
+  driveStraight2(1050);
+  driveStraight2(-300);
+  driveTurn2(110); //110
+  driveStraightC(900);
+  INTAKE.move(-127);
+  driveArcLF(30, 300, 500);
+  wing2.set_value(true);
+  driveStraightC(120);
+  driveArcLF(30, 300, 500);
+  driveTurn2(-10);
+  wing2.set_value(false);
+  driveTurn2(30);
+  driveStraight2(900);
+  driveStraight2(-650);
+  driveTurn2(45);
+  driveStraight2(900);
+  driveStraight2(-450);
+
+
+
 
 
   }
@@ -559,76 +231,91 @@ driveStraight2(-1800); //-500
 //3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
 
   
-  else if (atn == 3) { //rush
+  else if (atn == 3) { //not rush alliance safe 4 ball
   imu.tare();
-  intakep.set_value(true);
+  LIFT.move(-127);
   INTAKE.move(127);
-  driveStraight2(2300);
-  driveStraight2(-250);
-  driveTurn(75);
-  wing1.set_value(true);
-  driveStraight2(1200);
-  wing1.set_value(false);
-  driveStraight2(-400);
-  driveTurn2(-150);
-  driveStraight2(2700);
-  driveTurn2(93);
+  delay(400);
+  driveStraight2(-1500);
+  driveTurn2(135);
+  wing2.set_value(true);
+  driveArcLF(50, 300, 900);
+  driveTurn2(55);
+  wing2.set_value(false);
+  driveTurn2(105);
   INTAKE.move(-127);
-  driveStraight2(1400);
-  driveTurn2(75);
-  driveStraight2(1050);
+  driveStraight2(1500);
+  driveTurn2(95);
+  driveStraight2(-850);
+  driveTurn2(110);
+  driveStraight2(1800);
+  driveStraight2(-600);
+  driveTurn2(20);//15
+  INTAKE.move(127);
+  driveStraight2(1900);
+  driveTurn2(155);
+  INTAKE.move(-127);
+  driveStraight2(1900);
+  driveStraight2(-400);
+  driveTurn2(140);
+  driveStraight2(-1400);
+  wing2.set_value(true);
+  driveTurn2(-180);
+  driveStraight2(-300);
+  driveStraight2(1900);
+  driveStraight2(-300);
 
-  // driveStraight2(300);
-  // driveStraight2(-400);
-    
-  //   tempre = false;
-  //  awp.set_value(true);
-  // delay(500);
-//   driveStraight2(-2500);
-//   driveStraight2(1000);
-//  // driveTurn2(170);
-//   //awp.set_value(false);
-//   // driveTurn2(45);
-//   // //intakep.set_value(true);
-//   // driveStraight2(-1500);
-//   // driveStraight2(1400);
-//   // driveTurn2(0);
-//   // driveStraight2(800);
-//   // driveTurn2(-45);
-//   // driveStraight2(1550);
-//   // intakep.set_value(true);
-    
   
+
+
   }
 
 //44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
 
 
-  else if (atn == 4) { //out of corner
-     tempre = false;
-     driveStraight2(100);
-   LIFT.move(127);
-   delay(1500);
-  // LIFT.move(-127);
-  //  delay(150);
-   LIFT.move(0);
-   INTAKE.move(-127);
-   driveTurn2(-100);
-   LIFT.move(-127);
-   driveTurn2(60);
-   LIFT.move(0);
-   driveStraight2(1000);
-   driveTurn2(30);
-   intakep.set_value(true);
-   driveStraight2(1000);
+  else if (atn == 4) { //safe with 6 ball
+     imu.tare();
+  LIFT.move(-127);
+  INTAKE.move(127);
+  delay(400);
+  driveStraight2(-1500);
+  driveTurn2(135);
+  wing2.set_value(true);
+  driveArcLF(50, 300, 900);
+  driveTurn2(55);
+  wing2.set_value(false);
+  driveTurn2(105);
+  INTAKE.move(-127);
+  driveStraight2(1500);
+  driveTurn2(95);
+  driveStraight2(-850);
+  driveTurn2(110);
+  driveStraight2(1800);
+  driveStraight2(-600);
+  driveTurn2(20);//15
+  INTAKE.move(127);
+  driveStraight2(2100);
+  driveTurn2(155);
+  INTAKE.move(-127);
+  delay(375);
+  driveTurn2(70);//75
+  INTAKE.move(127);
+  driveStraight2(900); //1000
+  driveTurn2(-175);
+  INTAKE.move(-127);
+  wing1.set_value(true);
+  driveStraight2(1800);
+  wing1.set_value(false);
+  driveStraight2(-400);
 
-  }
+  
+
 
 //55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555
 
-  else if(atn == 5) {
+  } else if(atn == 5) {
     tempre = false;
-imu.tare_heading();
+  imu.tare_heading();
   intakep.set_value(true);
   awp.set_value(true);
   driveStraight2(600);
